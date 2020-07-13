@@ -36,6 +36,7 @@ if ~exist('baseline')
     VAFN = initialize_gains();
     sim('AGTF30SysDyn.mdl');
     baseline = out_Dyn.eng.Data.HPC_Data;
+    out_Dyn_baseline = out_Dyn;
     VSV = tempVSV;
     VAFN = tempVAFN;
 end
@@ -45,16 +46,18 @@ end
 % Plotting
 % ==========================================================================================
 figure;
-
-plot(baseline.Wcin.Data./baseline.s_C_Wc.Data, baseline.PR.Data./baseline.s_C_PR.Data, 'o');
+h1 = plot(WcMap(:,:,2)', PRMap(:,:,2)', 'c-');
 hold on
-plot(data.Wcin.Data./data.s_C_Wc.Data, data.PR.Data./data.s_C_PR.Data, 'o');
-grid on
+h2 = plot(WcSM(:,2)', PRSM(:,2)', 'r-');
+h3 = plot(baseline.Wcin.Data./baseline.s_C_Wc.Data, baseline.PR.Data./baseline.s_C_PR.Data, 'o', 'DisplayName', 'baseline');
 
-legend({'Baseline', 'Modified'}, 'location', 'southeast');
+h4 = plot(data.Wcin.Data./data.s_C_Wc.Data, data.PR.Data./data.s_C_PR.Data, 'o', 'DisplayName', 'modified');
+% grid on
 
-xlim([140 190]);
-ylim([14 21]);
+legend([h3, h4], 'location', 'southeast');
+
+% xlim([140 190]);
+% ylim([14 21]);
 
 title({'Compressor Map: ',...
     ['VSV:  k_p = ', num2str(VSV.k_p), ',  k_i = ', num2str(VSV.k_i)],...
